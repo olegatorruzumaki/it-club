@@ -1,26 +1,39 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
-  <div class="payment">
-    <div class="payment__contact">
+  <div class="payment p-5">
+    <div class="payment__title text-center">
+      Make a payment
+    </div>
+    <div class="payment__row">
       <div>Select contact</div>
-      <div class="contact__select"></div>
+      <router-link :to="'/selectContact'" class="payment__select block"></router-link>
     </div>
-    <div class="payment__method">
-      <div>Select contact</div>
-      <div class="method__select"></div>
+    <div class="payment__row">
+      <div>Select payment method</div>
+      <div class="payment__select"></div>
     </div>
-    <div class="payment__amount">
-      <div class="text-3xl font-bold underline">Select contact</div>
-      <div class="amount__value"></div>
+    <div class="payment__row">
+      <div>Enter amount</div>
+      <div class="payment__value"></div>
     </div>
-    <div>
-      <button class="btn bg-purple-900 text-white">Pay</button>
+    <div class="mt-10 w-full">
+      <button>Pay</button>
     </div>
   </div>
 </template>
 
-<style scoped>
+<script setup lang="ts">
+</script>
+
+<style>
+.payment__row {
+  @apply mt-3
+}
+
+.payment__select,
+.payment__value {
+  @apply h-10 border w-full
+}
+input, .input {
+  @apply h-10 border w-full px-3
+}
 </style>
