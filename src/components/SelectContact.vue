@@ -1,11 +1,11 @@
 <template>
-  <div class="payment p-5">
-    <div class="contact__title -mx-5 text-center flex justify-around">
-      <router-link :to="'/'">-</router-link>
+  <div class="payment h-screen px-5 pb-10 flex flex-col">
+    <div class="contact__title -mx-5 text-center flex justify-around items-center p-3">
+      <router-link class="back-btn" :to="'/'"><img src="../assets/arrow.svg" alt="back"></router-link>
       <div>Select contact</div>
-      <router-link :to="'/addContact'">+</router-link>
+      <router-link class="add-btn" :to="'/addContact'"><img src="../assets/plus.svg" alt="add"></router-link>
     </div>
-    <div class="select__row" v-for="contact in contactsData">
+    <div class="select__row" v-for="contact in contactsData" @click="selectContact(contact)">
       {{ contact.firstName }}
       {{ contact.lastName }}
       {{ contact.email }}
@@ -16,19 +16,20 @@
 <script lang="ts">
 import {defineComponent, reactive, toRefs} from 'vue';
 
-
 export default defineComponent({
-  name: 'AddContact',
+  name: 'SelectContact',
   components: {},
   setup() {
     const state = reactive({
-      contactsData: JSON.parse(localStorage.contacts) as object[],
+      contactsData: localStorage.contacts ? JSON.parse(localStorage.contacts) as object[] : {},
     })
     return {...toRefs(state)}
   },
-  methods: {},
-  mounted() {
-    console.log('contactsData', this.contactsData);
+  methods: {
+    selectContact(contact) {
+      sessionStorage.setItem('selectedContact', JSON.stringify(contact));
+      this.$router.push({name: 'Payment'});
+    },
   }
 })
 </script>

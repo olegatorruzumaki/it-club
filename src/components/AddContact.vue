@@ -1,7 +1,7 @@
 <template>
-  <Form @submit="saveData" class="payment p-5">
-    <div class="contact__title -mx-5 text-center flex justify-around">
-      <router-link :to="'/selectContact'">-</router-link>
+  <Form @submit="saveData" class="payment h-screen px-5 pb-10 flex flex-col">
+    <div class="contact__title -mx-5 text-center flex justify-around items-center p-3">
+      <router-link class="back-btn" :to="'/selectContact'"><img src="../assets/arrow.svg" alt="back"></router-link>
       <div>New contact</div>
       <div></div>
     </div>
@@ -23,9 +23,8 @@
         <ErrorMessage name="email"/>
       </label>
     </div>
-    <div class="mt-10 w-full">
+    <div class="mt-auto w-full">
       <button class="btn" type="submit">Save</button>
-      <button class="btn mt-10" @click="clearLocal">Clear</button>
     </div>
   </Form>
 </template>
@@ -67,11 +66,6 @@ export default defineComponent({
       }
       localStorage.setItem('contacts', JSON.stringify(contacts));
 
-      this.contactData = {
-        firstName: '' as string,
-        lastName: '' as string,
-        email: '' as string,
-      }
       this.$router.push('/selectContact');
     },
 

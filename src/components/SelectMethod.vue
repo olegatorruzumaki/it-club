@@ -1,35 +1,106 @@
 <template>
-  <div class="payment p-5">
-    <div class="contact__title -mx-5 text-center flex justify-around">
-      <router-link :to="'/'">-</router-link>
-      <div>Select contact</div>
-      <router-link :to="'/addContact'">+</router-link>
+  <div class="payment h-screen px-5 pb-10 flex flex-col">
+    <div class="contact__title -mx-5 text-center flex justify-around items-center p-3">
+      <router-link class="back-btn" :to="'/'"><img src="../assets/arrow.svg" alt="back"></router-link>
+      <div>Select method</div>
+      <router-link class="add-btn" :to="'/addMethod'"><img src="../assets/plus.svg" alt="add"></router-link>
     </div>
-    <div class="select__row" v-for="contact in contactsData">
-      {{ contact.firstName }}
-      {{ contact.lastName }}
-      {{ contact.email }}
+    <div v-if="methodsCardsData.length" class="mb-10">
+      <div class="payment__row">
+        <div>Credit/debit cards</div>
+      </div>
+      <div class="select__row" v-for="methodCard in methodsCardsData" :key="methodCard.accountNumber"
+           @click="selectMethod(methodCard)">
+        <div class="card__type flex justify-between mb-5">
+          <div class="card__type border w-10 h-7"></div>
+          <Popper hover>
+            <button @click="dotsClick" class="p-2"><img class="block" src="../assets/dots.svg" alt="dots"></button>
+            <template #content>
+              <div @click="removeMethod($event, methodCard)">Remove Card</div>
+            </template>
+          </Popper>
+        </div>
+        <div>{{ methodCard.fullName }}</div>
+        <div class="flex justify-between">
+          <div>{{ methodCard.cardNumber }}</div>
+          <div>{{ methodCard.date }}</div>
+        </div>
+      </div>
+    </div>
+    <div v-if="methodsAccountsData.length">
+      <div class="payment__row">
+        <div>Bank accounts</div>
+      </div>
+      <div class="select__row p-5" v-for="methodAccount in methodsAccountsData" :key="methodAccount.accountNumber"
+           @click="selectMethod(methodAccount)">
+        <div class="flex justify-between items-center">
+          <div>{{ methodAccount.accountName }}</div>
+          <Popper hover>
+            <button @click="dotsClick" class="p-2"><img class="block" src="../assets/dots.svg" alt="dots"></button>
+            <template #content>
+              <div @click="removeMethod($event, methodAccount)">Remove Account</div>
+            </template>
+          </Popper>
+        </div>
+        <div>{{ methodAccount.accountNumber }}</div>
+        <div class="text-right">{{ methodAccount.bsb }}</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent, reactive, toRefs} from 'vue';
-
+import Popper from "vue3-popper";
 
 export default defineComponent({
-  name: 'AddContact',
-  components: {},
+  name: 'SelectMethod',
+  components: {
+    Popper,
+  },
   setup() {
     const state = reactive({
-      contactsData: JSON.parse(localStorage.contacts) as object[],
+      methodsCardsData: localStorage.methodCard ? JSON.parse(localStorage.methodCard) as object[] : {},
+      methodsAccountsData: localStorage.methodAccount ? JSON.parse(localStorage.methodAccount) as object[] : {},
     })
     return {...toRefs(state)}
   },
-  methods: {},
-  mounted() {
-    console.log('contactsData', this.contactsData);
-  }
+  methods: {
+    selectMethod(method) {
+      sessionStorage.setItem('selectedMethod', JSON.stringify(
+          {
+            name: method.fullName || method.accountName,
+            number: method.cardNumber || method.accountNumber,
+            dateBSB: method.date || method.bsb,
+          })
+      );
+      this.$router.push({name: 'Payment'});
+    },
+    dotsClick(event) {
+      event.stopPropagation();
+    },
+    removeMethod(event, method) {
+      event.stopPropagation();
+      if (method.type === 'card') {
+        let methodCard = JSON.parse(localStorage.getItem('methodCard'));
+        const indexOfObject = methodCard.findIndex(object => {
+          return object.cardNumber === method.cardNumber;
+        });
+        methodCard.splice(indexOfObject, 1);
+        localStorage.setItem('methodCard', JSON.stringify(methodCard));
+        this.methodsCardsData = localStorage.methodCard ? JSON.parse(localStorage.methodCard) as object[] : {};
+      } else {
+        let methodAccount = JSON.parse(localStorage.getItem('methodAccount'));
+        const indexOfObject = methodAccount.findIndex(object => {
+          return object.accountNumber === method.accountNumber;
+        });
+        methodAccount.splice(indexOfObject, 1);
+        localStorage.setItem('methodAccount', JSON.stringify(methodAccount));
+        this.methodsAccountsData = localStorage.methodAccount ? JSON.parse(localStorage.methodAccount) as object[] : {};
+      }
+      sessionStorage.removeItem('selectedMethod');
+    },
+  },
 })
 </script>
 
@@ -39,6 +110,6 @@ export default defineComponent({
 }
 
 .select__row {
-  @apply mt-3 py-1 px-3 border whitespace-nowrap overflow-hidden
+  @apply mt-3 p-3 border whitespace-nowrap overflow-hidden
 }
 </style>
