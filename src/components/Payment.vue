@@ -1,22 +1,22 @@
 <template>
-  <Form @submit="submit" class="payment h-screen px-5 pb-10 pt-5 flex flex-col">
+  <Form @submit="submit" class="payment">
     <div class="payment__title text-center">
       Make a payment
     </div>
     <div class="payment__row">
       <div>Select contact</div>
-      <router-link :to="'/selectContact'" class="payment__select flex px-3 items-center">
-        {{ contact.firstName }}
-        {{ contact.lastName }}
-        {{ contact.email }}
+      <router-link :to="{name: 'SelectContact'}" class="payment__select flex px-3 items-center">
+        {{ contact['firstName'] }}
+        {{ contact['lastName'] }}
+        {{ contact['email'] }}
       </router-link>
     </div>
     <div class="payment__row">
       <div>Select payment method</div>
-      <router-link :to="'/selectMethod'" class="payment__select flex px-3 items-center">
-        {{ method.name }}
-        {{ method.number }}
-        {{ method.dateBSB }}
+      <router-link :to="{name: 'SelectMethod'}" class="payment__select flex px-3 items-center">
+        {{ method['name'] }}
+        {{ method['number'] }}
+        {{ method['dateBSB'] }}
       </router-link>
     </div>
     <div class="payment__row">
@@ -39,6 +39,7 @@ import {mask} from 'vue-the-mask'
 
 export default defineComponent({
   name: 'Payment',
+  // @ts-ignore
   directives: {mask},
   components: {
     Form,
@@ -48,27 +49,24 @@ export default defineComponent({
   setup() {
     const state = reactive({
       contact: {
-        firstName: '' as string,
-        lastName: '' as string,
-        email: '' as string,
-      } as object,
+        firstName: sessionStorage.selectedContact ? JSON.parse(sessionStorage.selectedContact).firstName : '',
+        lastName: sessionStorage.selectedContact ? JSON.parse(sessionStorage.selectedContact).lastName : '',
+        email: sessionStorage.selectedContact ? JSON.parse(sessionStorage.selectedContact).email : '',
+      },
       method: {
-        name: '' as string,
-        number: '' as string,
-        dateBSB: '' as string,
-      } as object,
+        name: sessionStorage.selectedMethod ? JSON.parse(sessionStorage.selectedMethod).name : '',
+        number: sessionStorage.selectedMethod ? JSON.parse(sessionStorage.selectedMethod).number : '',
+        dateBSB: sessionStorage.selectedMethod ? JSON.parse(sessionStorage.selectedMethod).dateBSB : '',
+      },
     })
     return {...toRefs(state)}
   },
   methods: {
     submit() {
-      this.$router.push({name: 'Final'})
-    }
+      // @ts-ignore
+      this.$router.push({name: 'Final'});
+    },
   },
-  mounted() {
-    this.contact = sessionStorage.getItem('selectedContact') ? JSON.parse(sessionStorage.getItem('selectedContact')) : '';
-    this.method = sessionStorage.getItem('selectedMethod') ? JSON.parse(sessionStorage.getItem('selectedMethod')) : '';
-  }
 })
 </script>
 

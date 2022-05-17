@@ -1,25 +1,25 @@
 <template>
-  <Form @submit="saveData" class="payment h-screen px-5 pb-10 flex flex-col">
+  <Form @submit="saveData" class="payment">
     <div class="contact__title -mx-5 text-center flex justify-around items-center p-3">
-      <router-link class="back-btn" :to="'/selectContact'"><img src="../assets/arrow.svg" alt="back"></router-link>
+      <router-link class="back-btn" :to="{name: 'SelectContact'}"><img src="../assets/arrow.svg" alt="back"></router-link>
       <div>New contact</div>
       <div></div>
     </div>
     <div class="payment__row">
       <div>First Name
-        <Field class="input" name="firstName" v-model="contactData.firstName" type="text" rules="required"/>
+        <Field class="input" name="firstName" v-model="contactData['firstName']" type="text" rules="required"/>
         <ErrorMessage name="firstName"/>
       </div>
     </div>
     <div class="payment__row">
       <label>Last Name
-        <Field class="input" name="lastName" v-model="contactData.lastName" type="text" rules="required"/>
+        <Field class="input" name="lastName" v-model="contactData['lastName']" type="text" rules="required"/>
         <ErrorMessage name="lastName"/>
       </label>
     </div>
     <div class="payment__row">
       <label>Email
-        <Field class="input" name="email" v-model="contactData.email" type="email" rules="required|email"/>
+        <Field class="input" name="email" v-model="contactData['email']" type="email" rules="required|email"/>
         <ErrorMessage name="email"/>
       </label>
     </div>
@@ -47,9 +47,9 @@ export default defineComponent({
   setup() {
     const state = reactive({
       contactData: {
-        firstName: '' as string,
-        lastName: '' as string,
-        email: '' as string,
+        firstName: '',
+        lastName: '',
+        email: '',
       }
     })
 
@@ -57,21 +57,19 @@ export default defineComponent({
   },
   methods: {
     saveData() {
-      let contacts: any[] = [];
+      let contacts: object[] = [];
+      const contactData = this.contactData;
       if (localStorage.contacts) {
         contacts = JSON.parse(localStorage.contacts);
-        contacts.push(this.contactData)
+        contacts.push(contactData)
       } else {
-        contacts.push(this.contactData);
+        contacts.push(contactData);
       }
       localStorage.setItem('contacts', JSON.stringify(contacts));
 
-      this.$router.push('/selectContact');
+      // @ts-ignore
+      this.$router.push({name: 'SelectContact'});
     },
-
-    clearLocal() {
-      localStorage.clear();
-    }
   }
 })
 </script>

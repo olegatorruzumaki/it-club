@@ -20,31 +20,31 @@ const router = createRouter({
             meta: {transition: 'slide-right'},
         },
         {
-            path: '/selectContact',
+            path: '/#selectContact', // после рефреша страницы всегда будет кидать на стартовую страницу
             name: 'SelectContact',
             component: SelectContact,
             meta: {transition: 'slide-left'},
         },
         {
-            path: '/addContact',
+            path: '/#addContact',
             name: 'AddContact',
             component: AddContact,
             meta: {transition: 'slide-left'},
         },
         {
-            path: '/addMethod',
+            path: '/#addMethod',
             name: 'AddMethod',
             component: AddMethod,
             meta: {transition: 'slide-left'},
         },
         {
-            path: '/selectMethod',
+            path: '/#selectMethod',
             name: 'SelectMethod',
             component: SelectMethod,
             meta: {transition: 'slide-left'},
         },
         {
-            path: '/finalForm',
+            path: '/#finalForm',
             name: 'Final',
             component: FinalForm,
             meta: {transition: 'fade-bottom'},

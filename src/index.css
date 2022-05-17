@@ -11,6 +11,10 @@
     height: 30px;
 }
 
+.payment {
+    @apply h-screen px-5 pb-20 pt-5 flex flex-col
+}
+
 .slide-left-enter-active, .slide-left-leave-active,
 .slide-right-enter-active, .slide-right-leave-active,
 .fade-top-enter-active, .fade-top-leave-active,

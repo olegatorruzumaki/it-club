@@ -1,14 +1,14 @@
 <template>
-  <div class="payment h-screen px-5 pb-10 flex flex-col">
+  <div class="payment">
     <div class="contact__title -mx-5 text-center flex justify-around items-center p-3">
-      <router-link class="back-btn" :to="'/'"><img src="../assets/arrow.svg" alt="back"></router-link>
+      <router-link class="back-btn" :to="{name: 'Payment'}"><img src="../assets/arrow.svg" alt="back"></router-link>
       <div>Select contact</div>
-      <router-link class="add-btn" :to="'/addContact'"><img src="../assets/plus.svg" alt="add"></router-link>
+      <router-link class="add-btn" :to="{name: 'AddContact'}"><img src="../assets/plus.svg" alt="add"></router-link>
     </div>
-    <div class="select__row" v-for="contact in contactsData" @click="selectContact(contact)">
-      {{ contact.firstName }}
-      {{ contact.lastName }}
-      {{ contact.email }}
+    <div class="select__row" v-for="(contact, index) in contactsData" :key="index" @click="selectContact(contact)">
+      {{ contact['firstName'] }}
+      {{ contact['lastName'] }}
+      {{ contact['email'] }}
     </div>
   </div>
 </template>
@@ -26,8 +26,9 @@ export default defineComponent({
     return {...toRefs(state)}
   },
   methods: {
-    selectContact(contact) {
+    selectContact(contact: object) {
       sessionStorage.setItem('selectedContact', JSON.stringify(contact));
+      // @ts-ignore
       this.$router.push({name: 'Payment'});
     },
   }
